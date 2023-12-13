@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Shortener</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Germania+One|Patua+One|Lobster|Germania+One|Pacifico|Dancing+Script|Amatic+SC|Mrs+Sheppards|Cinzel|Great+Vibes|Indie+Flower|Permanent+Marker|Courgette|Berkshire+Swash|Cookie|Damion|Homemade+Apple|Italianno|Itim|Leckerli+One|Marck+Script|Merienda|Mr+Dafoe|Norican|Parisienne|Petit+Formal+Script|Sacramento|Yellowtail|Yesteryear|B612+Mono|Cutive+Mono|Inconsolata|Major+Mono+Display|Roboto+Mono|Source+Code+Pro|VT323|Baloo+Chettan|Charm|Bungee+Inline|Cabin+Sketch|Ceviche+One|Codystar|Freckle+Face|Fredericka+the+Great|Frijole|Fugaz+One|Germania+One|Graduate|Iceberg|Katibeh|Knewave|Kranky|Libre+Barcode+39|Lobster+Two|Luckiest+Guy|Margarine|Monoton|Playball|Righteous|Special+Elite|Spirax|Uncial+Antiqua|Amiri|Anton|Crete+Round|Exo|Francois+One|Lora|Orbitron|Oswald|Ubuntu" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<style>
+    body{
+    padding: 0;
+    margin: 0;
+    background: linear-gradient(to right, hsl(195, 100%, 60%), hsl(150, 100%, 60%));
+    height: 100VH;
+}
+
+header{
+    position: relative;
+    width: 90%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+header h1{
+    text-align: center;
+    color: #505050;
+    padding: 0;
+    margin: 0;
+    font-family: 'Charm', sans-serif;
+}
+header .content{
+    position: relative;
+    border: 2px dashed #252525;
+    box-sizing: border-box;
+    padding: 5px;
+    border-radius: 10px;
+}
+header .content span{
+    display: block;
+    text-align: center;
+    font-family: 'Charm', sans-serif;
+    margin: 5px;
+    font-weight: bold;
+    color: #505050;
+    letter-spacing: 2px;
+}
+header .content a{
+    width: 100%;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+section{
+    position: relative;
+    margin-top: 20px;
+    width: 95%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+section form input[type=text]{
+    display: block;
+    width: 100%;
+    height: 35px;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+section form input[type=submit]{
+    position: relative;
+    margin-top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 30px;
+    border: none;
+    border-radius: 10px;
+    letter-spacing: 1px;
+    font-family: 'lobster', sans-serif;
+    color: white;
+    cursor: pointer;
+    background-color:     hsl(195, 100%, 40%);
+}
+
+section .output{
+    margin-top: 20px;
+}
+section .output textarea{
+    width: 100%;
+    height: 70px;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    padding: 25px 0;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+section .txt{
+    text-align: center;
+    margin-top: 10px;
+    font-family: 'Charm', sans-serif;
+    font-size: 25px;
+}
+
+footer{
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    color: #252525;
+    font-family: 'Oswald', sans-serif;
+}
+.loading{
+    position: relative;
+    display: none;
+    left: 0;
+    right: 0;
+    margin: auto;
+    margin-top: 10px;
+    width: 30px;
+    height: 30px;
+    border: 3px solid black;
+    border-radius: 50%;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    animation: rotate .4s ease-in-out infinite;
+}
+
+@keyframes rotate{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+</style>
+<body>
+
+    <header>
+        <!--HEADER CONTENT-->
+        
+        <h1>URL Shortener</h1><br>
+        <div class="content">
+            <span>NK<br>Url Shortner v1</span>
+            <a 
+        </div>
+    </header>
+
+    <section>
+        <form action="JavaScript:void(0)">
+            <input type="text" id="url" name="url" placeholder="Paste your URL here...">
+            <span class="loading"><!-- LOADER LOADING --></span>
+            <input type="submit" name="submit" value="Get Short Url" onclick="shortUrl()">
+        </form>
+
+        <div class="output">
+            <!--OUTPUT SHORT URL-->
+            <textarea placeholder="Your Short Link Output..."></textarea>
+        </div>
+
+        <div class="txt"><!-- SUCCESS ERROR MESSAGE --></div>
+    </section>
+
+    <footer>
+        <!--FOOTER CONTENT-->
+        Coder: NK
+    </footer>
+<script>
+function shortUrl(){
+
+    var input = document.querySelector("#url");
+    var output = document.querySelector("textarea");
+    var message = document.querySelector(".txt");
+    var loader = document.querySelector(".loading");
+
+    output.value = "";
+    loader.style.display = "block";
+
+    if(input.value =="" || input.value ==" ")
+    {
+        loader.style.display = "none";
+        message.innerHTML = "<u>Error!</u><br>Url is Empty";
+    } else{
+        validate(input, loader, message, output);
+    }
+}
+
+
+function validate(input, loader, message, output) {
+    var pattern = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    if (pattern.test(input.value)) {
+
+        var url = "https://api.shrtco.de/v2/shorten?url="+input.value;
+        $.getJSON({url: url, success: function(data){
+            var short_link = data.result.full_short_link;
+
+            loader.style.display = "none";
+            output.value = short_link;
+            output.select();
+            document.execCommand("copy");
+            message.innerHTML = "<u>Congratulation!</u><br>Your Short Link is<br>Copied to Clipboard.";
+        }});
+
+    } else{
+        loader.style.display = "none";
+        message.innerHTML = "<u>Error!</u><br>Url is Not Valid";
+    } 
+}
+</script>
+</body>
+</html>
